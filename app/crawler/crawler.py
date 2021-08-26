@@ -1,14 +1,15 @@
 import pylast
+import pymongo
 import spotipy
-from SpotiGraph.crawler.artist import *
+from app.crawler.artist import *
 from pymongo import MongoClient
 from spotipy.oauth2 import SpotifyClientCredentials
 
 # credentials
 
 
-client = MongoClient("mongodb://localhost:27017/")
-db = client["spotigraph"]
+client = pymongo.MongoClient("mongodb+srv://lolloborag:ProgettoSN@Cluster0.vtzyc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+db = client["database"]
 db_artists = db['artists']
 db_tags = db['tags']
 

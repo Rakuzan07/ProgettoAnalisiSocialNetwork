@@ -10,6 +10,9 @@ pymongo = "*"
 spotipy = "*"
 networkx = "*"
 scikit-learn = "*"
+dnspython = "*"
+cryptography = "*"
+crypto = "*"
 
 [dev-packages]
 
