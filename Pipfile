@@ -11,8 +11,7 @@ spotipy = "*"
 networkx = "*"
 scikit-learn = "*"
 dnspython = "*"
-cryptography = "*"
-crypto = "*"
+hashlib-additional = "*"
 
 [dev-packages]
 
