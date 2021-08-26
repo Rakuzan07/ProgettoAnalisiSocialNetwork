@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 django = "*"
+pylast = "*"
+pymongo = "*"
+spotipy = "*"
+networkx = "*"
+scikit-learn = "*"
 
 [dev-packages]
 
