@@ -15,3 +15,4 @@ class SHA256Cipher(object):
 
     def __eq__(self, other):
         return self.value==other
+
