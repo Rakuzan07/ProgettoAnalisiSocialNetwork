@@ -8,7 +8,7 @@ class SHA256Cipher(object):
         self.encrypted = None
 
     def encrypt(self):
-      self.encrypted = hashlib.sha256(self.value).hexdigest()
+      self.encrypted = hashlib.sha256(self.value.encode('utf-8')).hexdigest()
 
     def get_encrypted_value(self):
         return self.encrypted
@@ -16,3 +16,6 @@ class SHA256Cipher(object):
     def __eq__(self, other):
         return self.value==other
 
+object = SHA256Cipher("ciao")
+object.encrypt()
+print(object.get_encrypted_value())
