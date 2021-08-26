@@ -16,6 +16,3 @@ class SHA256Cipher(object):
     def __eq__(self, other):
         return self.value==other
 
-object = SHA256Cipher("ciao")
-object.encrypt()
-print(object.get_encrypted_value())
