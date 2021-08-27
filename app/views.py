@@ -9,9 +9,10 @@ def login(request):
         username=request.POST['username']
         password=request.POST['password']
         if crawler.user_exist(username,password):
-           return render(request, 'presente')
+           return render(request, 'home.html')
         else :
-            return render(request, 'assente')
+            request.__setattr__('error', True)
+            return render(request, 'login.html')
     return render(request, 'login.html')
 
 def home(request):
