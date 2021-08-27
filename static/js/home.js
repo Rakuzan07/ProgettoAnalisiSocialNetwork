@@ -4,6 +4,6 @@ function setCookie(){
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get('code');
     if (code !== null) {
-        document.cookie = "code=" + code;
+        document.cookie = "code=" + code + "; path=/";
     }
 }
