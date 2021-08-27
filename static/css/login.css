@@ -17,7 +17,6 @@ body {
     top: 50%;
     left: 50%;
     background: #191919;
-    ;
     text-align: center;
     transition: 0.25s;
     margin-top: 100px
@@ -86,24 +85,6 @@ ul.social-network li {
     margin: 0 5px
 }
 
-.social-network a.icoFacebook:hover {
-    background-color: #3B5998
-}
-
-.social-network a.icoTwitter:hover {
-    background-color: #33ccff
-}
-
-.social-network a.icoGoogle:hover {
-    background-color: #BD3518
-}
-
-.social-network a.icoFacebook:hover i,
-.social-network a.icoTwitter:hover i,
-.social-network a.icoGoogle:hover i {
-    color: #fff
-}
-
 a.socialIcon:hover,
 .socialHoverClass {
     color: #44BCDD
@@ -135,5 +116,4 @@ a.socialIcon:hover,
 .social-circle i {
     color: #fff;
     transition: all 0.8s;
-    transition: all 0.8s
 }

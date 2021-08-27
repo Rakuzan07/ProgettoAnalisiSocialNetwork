@@ -20,5 +20,6 @@ from django.urls import path
 from app import views
 
 urlpatterns = [
-    url(r'^login/$', views.login, name="login")
+    url(r'^login/$', views.login, name="login"),
+    url(r'^home/$', views.home, name="home")
 ]
