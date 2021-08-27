@@ -1,9 +1,10 @@
 import pylast
 import pymongo
 import spotipy
-from app.crawler.artist import *
+from app.crawler.beans.artist import *
 from pymongo import MongoClient
 from spotipy.oauth2 import SpotifyClientCredentials
+from app.crawler.utils.Sha256Cipher import SHA256Cipher
 
 # credentials
 
@@ -12,6 +13,7 @@ client = pymongo.MongoClient("mongodb+srv://lolloborag:ProgettoSN@Cluster0.vtzyc
 db = client["database"]
 db_artists = db['artists']
 db_tags = db['tags']
+db_users = db['users']
 
 LAST_KEY = "5f52c83a8ed0440af21be4b5514262ae"
 LAST_SECRET = "b9f3f2c9d1a855c6dd0508be9208f5e4"
@@ -212,3 +214,11 @@ def get_artists_by_row() -> dict:
 def get_row(id: str) -> int:
     data = db_artists.find_one({'_id': id})
     return data['row']
+
+def user_exist(username: str, password: str) -> bool :
+    sha_pass=SHA256Cipher(password)
+    sha_pass.encrypt()
+    data = db_users.find_one({'username': username,'password': sha_pass.get_encrypted_value()})
+    if data is None:
+        return False
+    return True
