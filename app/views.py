@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from django.shortcuts import render
 from app.crawler import  crawler
 
@@ -20,4 +22,6 @@ def home(request):
 
 def artist(request):
     token=request.GET.get('token')
-    print(crawler.get_artist_followed(token))
+    crawler.get_artist_followed(token)
+    return render(request, 'artisti.html')
+

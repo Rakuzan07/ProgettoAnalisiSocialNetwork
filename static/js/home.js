@@ -10,7 +10,8 @@ function setCookie(){
 
 function getArtist(){
     cookie = getCookie('code');
-    windows.location='http://127.0.0.1:8000/artist/?token='+cookie;
+    window.location='http://127.0.0.1:8000/artist/?token='+cookie;
+    console.log("test");
 }
 
 function getCookie(cname) {

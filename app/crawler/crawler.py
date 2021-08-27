@@ -5,11 +5,13 @@ from app.crawler.beans.artist import *
 from pymongo import MongoClient
 from spotipy.oauth2 import SpotifyClientCredentials
 from app.crawler.utils.Sha256Cipher import SHA256Cipher
-
+import logging
+from spotipy.oauth2 import SpotifyOAuth
 # credentials
 
 
-client = pymongo.MongoClient("mongodb+srv://lolloborag:ProgettoSN@Cluster0.vtzyc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+client = pymongo.MongoClient(
+    "mongodb+srv://lolloborag:ProgettoSN@Cluster0.vtzyc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = client["database"]
 db_artists = db['artists']
 db_tags = db['tags']
@@ -17,13 +19,16 @@ db_users = db['users']
 
 LAST_KEY = "5f52c83a8ed0440af21be4b5514262ae"
 LAST_SECRET = "b9f3f2c9d1a855c6dd0508be9208f5e4"
-SPOTIFY_KEY = "8dceec3b5bec4d618979142ee304feb9"
-SPOTIFY_SECRET = "8f9afd96f99d49b38946b18ea05bd8d6"
+SPOTIFY_KEY = "7dfcff2789584927a64d6685f9f0d614"
+SPOTIFY_SECRET = "62d6f5da88564005971ba8b2897de968"
 # initialization of api
 last = pylast.LastFMNetwork(api_key=LAST_KEY, api_secret=LAST_SECRET)
 client_credentials_manager = SpotifyClientCredentials(SPOTIFY_KEY, SPOTIFY_SECRET)
 spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 spotify.trace = False
+
+scope = ['user-follow-modify', 'user-follow-read']
+sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIFY_SECRET, redirect_uri='http://localhost:8000/home')
 
 
 def api_get_artist_by_id(id: str) -> Artist:
@@ -215,17 +220,20 @@ def get_row(id: str) -> int:
     data = db_artists.find_one({'_id': id})
     return data['row']
 
-def user_exist(username: str, password: str) -> bool :
-    sha_pass=SHA256Cipher(password)
+
+def user_exist(username: str, password: str) -> bool:
+    sha_pass = SHA256Cipher(password)
     sha_pass.encrypt()
-    data = db_users.find_one({'username': username,'password': sha_pass.get_encrypted_value()})
+    data = db_users.find_one({'username': username, 'password': sha_pass.get_encrypted_value()})
     if data is None:
         return False
     return True
 
+
 def get_artist_followed(token):
-    spo = spotipy.Spotify(auth=token)
-    results=spo.current_user_followed_artists()
-    return results
-
-
+    token_info = sp_oauth.get_access_token(token)
+    access_token = token_info["access_token"]
+    sp = spotipy.Spotify(access_token)
+    results = sp.current_user_followed_artists()
+    print("STAMPA DI DEBUG2")
+    print(results)
