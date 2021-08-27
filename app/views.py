@@ -17,3 +17,7 @@ def login(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def artist(request):
+    token=request.GET.get('token')
+    print(crawler.get_artist_followed(token))

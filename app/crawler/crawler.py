@@ -222,3 +222,10 @@ def user_exist(username: str, password: str) -> bool :
     if data is None:
         return False
     return True
+
+def get_artist_followed(token):
+    spo = spotipy.Spotify(auth=token)
+    results=spo.current_user_followed_artists()
+    return results
+
+

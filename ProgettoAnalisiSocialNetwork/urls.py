@@ -21,5 +21,6 @@ from app import views
 
 urlpatterns = [
     url(r'^login/$', views.login, name="login"),
-    url(r'^home/$', views.home, name="home")
+    url(r'^home/$', views.home, name="home"),
+    url(r'^artist/$', views.artist, name="artist")
 ]
