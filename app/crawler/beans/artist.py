@@ -3,7 +3,7 @@ import json
 
 class Artist:
 
-    def __init__(self, id: str, name: str, genres: list, tags: list, related: list, image: str, row: int):
+    def __init__(self, id=None, name=None, genres=None, tags=None, related=None, image=None, row=None, popularity=None):
         super().__init__()
         self.name = name
         self.id = id
@@ -13,6 +13,7 @@ class Artist:
         self.image = image
         self.url = "https://open.spotify.com/artist/" + self.id
         self.row = row
+        self.popularity = popularity
 
     def get_name(self) -> str:
         return self.name

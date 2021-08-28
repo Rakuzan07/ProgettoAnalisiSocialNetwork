@@ -8,6 +8,7 @@ from app.crawler.utils.Sha256Cipher import SHA256Cipher
 import logging
 from spotipy.oauth2 import SpotifyOAuth
 from bottle import route, run, request
+
 # credentials
 
 
@@ -28,10 +29,12 @@ client_credentials_manager = SpotifyClientCredentials(SPOTIFY_KEY, SPOTIFY_SECRE
 spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 spotify.trace = False
 scope = ['user-follow-modify', 'user-follow-read']
-sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIFY_SECRET, redirect_uri='http://localhost:8000/home')
+sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIFY_SECRET,
+                        redirect_uri='http://localhost:8000/authenticate')
 token_info = sp_oauth.get_access_token("")
 access_token = token_info["access_token"]
 sp = spotipy.Spotify(access_token)
+
 
 def api_get_artist_by_id(id: str) -> Artist:
     data = spotify.artist(id)
@@ -232,13 +235,35 @@ def user_exist(username: str, password: str) -> bool:
     return True
 
 
-def get_artist_followed(token):
-
+def get_artist_followed():
     build_token()
     results = sp.current_user_followed_artists()
-    print("STAMPA DI DEBUG2")
-    print(results)
+    artists = []
+    for art in results['artists']['items']:
+        artist = Artist(id=art['id'], name=art['name'], genres=art['genres'], popularity=art['popularity'],
+                        image=art['images'][len(art['images']) - 1]['url'])
+        artists.append(artist)
+    return artists
 
+
+def get_users_followed():
+    build_token()
+    query = db_users.find({}, {'id': 1, '_id': False})
+    ids = []
+    for e in query:
+        print(ids.append(e['id']))
+
+    results = sp.current_user_following_users(ids)
+
+    i = 0
+    for e in results:
+        if not e:
+            results.pop(i)
+            ids.pop(i)
+        else:
+            i += 1
+
+    return ids
 
 
 def build_token():
@@ -262,3 +287,36 @@ def build_token():
         sp = spotipy.Spotify(access_token)
         results = sp.current_user()
         return results
+
+
+def store_user():
+    user = build_token()
+    if len(user['images']) > 0:
+        image = user['images'][0]['url']
+    else:
+        image = None
+
+    user_followed = get_users_followed()
+    artists_followed = get_artist_followed()
+    art_id = []
+    for artist in artists_followed:
+        art_id.append(artist.id)
+    user = {
+        'name': user['display_name'],
+        'id': user['id'],
+        'image': image,
+        'users_followed': user_followed,
+        'artists_followed': art_id
+    }
+    db_users.update_one({'id': user['id']}, {'$set': user})
+
+
+def get_artists_followed_by_user(user_id):
+    result = db_users.find_one({'id': user_id}, {'artists_followed': 1, '_id': 0})
+    return result['artists_followed']
+
+
+def get_all_artists_follwoed_by_all_users():
+    result = db_users.find({}, {'artists_followed': 1, 'id': 1, '_id': 0})
+    return result
+
