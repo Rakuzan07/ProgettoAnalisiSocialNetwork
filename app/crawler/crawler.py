@@ -7,6 +7,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 from app.crawler.utils.Sha256Cipher import SHA256Cipher
 import logging
 from spotipy.oauth2 import SpotifyOAuth
+from bottle import route, run, request
 # credentials
 
 
@@ -26,10 +27,11 @@ last = pylast.LastFMNetwork(api_key=LAST_KEY, api_secret=LAST_SECRET)
 client_credentials_manager = SpotifyClientCredentials(SPOTIFY_KEY, SPOTIFY_SECRET)
 spotify = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 spotify.trace = False
-
 scope = ['user-follow-modify', 'user-follow-read']
 sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIFY_SECRET, redirect_uri='http://localhost:8000/home')
-
+token_info = sp_oauth.get_access_token("")
+access_token = token_info["access_token"]
+sp = spotipy.Spotify(access_token)
 
 def api_get_artist_by_id(id: str) -> Artist:
     data = spotify.artist(id)
@@ -231,9 +233,32 @@ def user_exist(username: str, password: str) -> bool:
 
 
 def get_artist_followed(token):
-    token_info = sp_oauth.get_access_token(token)
-    access_token = token_info["access_token"]
-    sp = spotipy.Spotify(access_token)
+
+    build_token()
     results = sp.current_user_followed_artists()
     print("STAMPA DI DEBUG2")
     print(results)
+
+
+
+def build_token():
+    access_token = ""
+
+    token_info = sp_oauth.get_cached_token()
+
+    if token_info:
+        print("Found cached token!")
+        access_token = token_info['access_token']
+    else:
+        url = request.url
+        code = sp_oauth.parse_response_code(url)
+        if code != url:
+            print("Found Spotify auth code in Request URL! Trying to get valid access token...")
+            token_info = sp_oauth.get_access_token(code)
+            access_token = token_info['access_token']
+
+    if access_token:
+        print("Access token available! Trying to get user information...")
+        sp = spotipy.Spotify(access_token)
+        results = sp.current_user()
+        return results

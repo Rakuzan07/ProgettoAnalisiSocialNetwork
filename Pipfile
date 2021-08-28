@@ -12,6 +12,7 @@ networkx = "*"
 scikit-learn = "*"
 dnspython = "*"
 hashlib-additional = "*"
+bottle = "*"
 
 [dev-packages]
 
