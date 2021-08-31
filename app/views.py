@@ -1,7 +1,5 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 
-from ProgettoAnalisiSocialNetwork import settings
 from app.crawler import crawler
 
 

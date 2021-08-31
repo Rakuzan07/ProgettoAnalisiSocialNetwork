@@ -1,12 +1,9 @@
 import base64
-import urllib
 
 import pylast
 import pymongo
-import six
 import spotipy
 from app.crawler.beans.artist import *
-from pymongo import MongoClient
 from spotipy.oauth2 import SpotifyClientCredentials
 from app.crawler.utils.Sha256Cipher import SHA256Cipher
 from spotipy.oauth2 import SpotifyOAuth
@@ -262,42 +259,15 @@ def get_users_followed(token):
 
     results = sp.current_user_following_users(ids)
 
-    print(f"LEN INIZIO {len(ids)} {len(results)}")
-
-    """for i in range(len(results)):
-        print(results[i])
+    i = 0
+    while i < len(results):
         if not results[i]:
             results.pop(i)
             ids.pop(i)
-            i -= 1"""
-    res = dict(zip(ids, results))
-    print(res)
+        else:
+            i += 1
 
-    print(f"LEN FINE {len(ids)} {len(results)}")
     return ids
-
-
-"""def build_token():
-    access_token = ""
-
-    token_info = sp_oauth.get_cached_token()
-
-    if token_info:
-        print("Found cached token!")
-        access_token = token_info['access_token']
-    else:
-        url = request.url
-        code = sp_oauth.parse_response_code(url)
-        if code != url:
-            print("Found Spotify auth code in Request URL! Trying to get valid access token...")
-            token_info = sp_oauth.get_access_token(code)
-            access_token = token_info['access_token']
-
-    if access_token:
-        print("Access token available! Trying to get user information...")
-        sp = spotipy.Spotify(access_token)
-        results = sp.current_user()
-        return results"""
 
 
 def store_user(token):
@@ -401,6 +371,5 @@ def refresh_token(code):
     print(response.json())
     return response.json()
 
-# TODO: refresh del token ad ogni operazione
 
 
