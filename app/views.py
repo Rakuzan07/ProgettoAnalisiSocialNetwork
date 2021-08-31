@@ -1,21 +1,18 @@
-from pprint import pprint
-
+from django.http import HttpResponse
 from django.shortcuts import render
+
+from ProgettoAnalisiSocialNetwork import settings
 from app.crawler import crawler
 
 
 # Create your views here.
 
 def login(request):
-    if request.method=='POST':
-        username=request.POST['username']
-        password=request.POST['password']
-        if crawler.user_exist(username,password):
-           return render(request, 'home.html')
-        else :
-            request.__setattr__('error', True)
-            return render(request, 'login.html')
-    return render(request, 'login.html')
+    try:
+        code = request.COOKIES['code']
+        return render(request, 'home.html')
+    except KeyError:
+        return render(request, 'login.html')
 
 
 def home(request):
@@ -23,11 +20,25 @@ def home(request):
 
 
 def artist(request):
-    crawler.get_artist_followed()
+    # crawler.get_artist_followed()
     return render(request, 'artisti.html')
 
 
 def authenticate(request):
-    crawler.store_user()
-    print("UTENTE AGGIORNATO")
+    try:
+        code = request.COOKIES['code']
+        print("TROVATO NEI COOKIES")
+    except KeyError:
+        code = request.GET.get('code')
+        print("TROVATO NELL URL")
+
+    if code is None:
+        print("Il cookie non è settato!")
+    else:
+        data = crawler.get_token(code)
+        token = data['access_token']
+        refresh_token = data['refresh_token']
+        crawler.store_user(refresh_token)
+
+        request.__setattr__('refresh', refresh_token)
     return render(request, 'home.html')

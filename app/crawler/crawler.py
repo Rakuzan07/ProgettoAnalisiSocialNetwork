@@ -1,13 +1,16 @@
+import base64
+import urllib
+
 import pylast
 import pymongo
+import six
 import spotipy
 from app.crawler.beans.artist import *
 from pymongo import MongoClient
 from spotipy.oauth2 import SpotifyClientCredentials
 from app.crawler.utils.Sha256Cipher import SHA256Cipher
-import logging
 from spotipy.oauth2 import SpotifyOAuth
-from bottle import route, run, request
+import requests
 
 # credentials
 
@@ -31,9 +34,11 @@ spotify.trace = False
 scope = ['user-follow-modify', 'user-follow-read']
 sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIFY_SECRET,
                         redirect_uri='http://localhost:8000/authenticate')
-token_info = sp_oauth.get_access_token("")
-access_token = token_info["access_token"]
-sp = spotipy.Spotify(access_token)
+
+# inizializzo sp
+#token_info = sp_oauth.get_access_token(code="", check_cache=False)
+#access_token = token_info["access_token"]
+#sp = spotipy.Spotify(access_token)
 
 
 def api_get_artist_by_id(id: str) -> Artist:
@@ -235,8 +240,9 @@ def user_exist(username: str, password: str) -> bool:
     return True
 
 
-def get_artist_followed():
-    build_token()
+def get_artist_followed(token):
+    access_token = refresh_token(token)['access_token']
+    sp = spotipy.Spotify(access_token)
     results = sp.current_user_followed_artists()
     artists = []
     for art in results['artists']['items']:
@@ -246,8 +252,9 @@ def get_artist_followed():
     return artists
 
 
-def get_users_followed():
-    build_token()
+def get_users_followed(token):
+    access_token = refresh_token(token)['access_token']
+    sp = spotipy.Spotify(access_token)
     query = db_users.find({}, {'id': 1, '_id': False})
     ids = []
     for e in query:
@@ -255,18 +262,22 @@ def get_users_followed():
 
     results = sp.current_user_following_users(ids)
 
-    i = 0
-    for e in results:
-        if not e:
+    print(f"LEN INIZIO {len(ids)} {len(results)}")
+
+    """for i in range(len(results)):
+        print(results[i])
+        if not results[i]:
             results.pop(i)
             ids.pop(i)
-        else:
-            i += 1
+            i -= 1"""
+    res = dict(zip(ids, results))
+    print(res)
 
+    print(f"LEN FINE {len(ids)} {len(results)}")
     return ids
 
 
-def build_token():
+"""def build_token():
     access_token = ""
 
     token_info = sp_oauth.get_cached_token()
@@ -286,18 +297,20 @@ def build_token():
         print("Access token available! Trying to get user information...")
         sp = spotipy.Spotify(access_token)
         results = sp.current_user()
-        return results
+        return results"""
 
 
-def store_user():
-    user = build_token()
+def store_user(token):
+    access_token = refresh_token(token)['access_token']
+    sp = spotipy.Spotify(access_token)
+    user = sp.current_user()
     if len(user['images']) > 0:
         image = user['images'][0]['url']
     else:
         image = None
 
-    user_followed = get_users_followed()
-    artists_followed = get_artist_followed()
+    user_followed = get_users_followed(token)
+    artists_followed = get_artist_followed(token)
     art_id = []
     for artist in artists_followed:
         art_id.append(artist.id)
@@ -308,7 +321,14 @@ def store_user():
         'users_followed': user_followed,
         'artists_followed': art_id
     }
-    db_users.update_one({'id': user['id']}, {'$set': user})
+    print(user)
+    db_users.update_one({'id': user['id']}, {'$set': user}, upsert=True)
+
+
+def get_user_info(token):
+    access_token = refresh_token(token)['access_token']
+    sp = spotipy.Spotify(access_token)
+    return sp.current_user()
 
 
 def get_artists_followed_by_user(user_id):
@@ -316,7 +336,71 @@ def get_artists_followed_by_user(user_id):
     return result['artists_followed']
 
 
-def get_all_artists_follwoed_by_all_users():
+def get_all_artists_followed_by_all_users():
     result = db_users.find({}, {'artists_followed': 1, 'id': 1, '_id': 0})
     return result
+
+
+def get_all_users_followed_by_all_users():
+    result = db_users.find({}, {'users_followed': 1, 'id': 1, '_id': 0})
+    return result
+
+
+def get_token(code):
+    """
+    Method that must be used only the first time during the login
+    :param code: Code provided during authorize operation
+    :return: json containing access_token, refresh_token
+    """
+    OAUTH_TOKEN_URL = "https://accounts.spotify.com/api/token"
+    payload = {
+        "redirect_uri": 'http://localhost:8000/authenticate',
+        "code": code,
+        "grant_type": "authorization_code",
+    }
+    s = SPOTIFY_KEY + ":" + SPOTIFY_SECRET
+    ascii = s.encode('ascii')
+    base64_bytes = base64.b64encode(ascii)
+    auth_header = base64_bytes.decode('ascii')
+    headers = {"Authorization": "Basic %s" % auth_header}
+
+    response = requests.post(
+        OAUTH_TOKEN_URL,
+        data=payload,
+        headers=headers
+    )
+
+    print(response.json())
+    return response.json()
+
+
+def refresh_token(code):
+    """
+        Method that must be used every time you use the spotipy api
+        :param code: refresh token provided during the get_token operations
+        :return: json containing access_token, refresh_token
+    """
+    OAUTH_TOKEN_URL = "https://accounts.spotify.com/api/token"
+    payload = {
+        "redirect_uri": 'http://localhost:8000/authenticate',
+        "refresh_token": code,
+        "grant_type": "refresh_token",
+    }
+    s = SPOTIFY_KEY + ":" + SPOTIFY_SECRET
+    ascii = s.encode('ascii')
+    base64_bytes = base64.b64encode(ascii)
+    auth_header = base64_bytes.decode('ascii')
+    headers = {"Authorization": "Basic %s" % auth_header}
+
+    response = requests.post(
+        OAUTH_TOKEN_URL,
+        data=payload,
+        headers=headers
+    )
+
+    print(response.json())
+    return response.json()
+
+# TODO: refresh del token ad ogni operazione
+
 
