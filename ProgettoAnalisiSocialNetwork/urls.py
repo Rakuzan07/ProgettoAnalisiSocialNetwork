@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^home/$', views.home, name="home"),
     url(r'^artist/$', views.artist, name="artist"),
     url(r'^authenticate/$', views.authenticate, name="authenticate"),
+    url(r'^get_graph/$', views.get_graph, name="get_graph"),
 ]

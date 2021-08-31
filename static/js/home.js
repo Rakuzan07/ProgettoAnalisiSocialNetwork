@@ -7,7 +7,9 @@ function setCookie(refresh){
         document.cookie = "code=" + code + "; path=/";
     }
 
+    console.log('sono entrato')
     if (refresh !== null) {
+        console.log('sono entrato')
         document.cookie = "refresh_token=" + refresh + "; path=/";
     }
 

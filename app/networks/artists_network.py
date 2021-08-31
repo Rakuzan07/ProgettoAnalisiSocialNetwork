@@ -5,12 +5,16 @@ from app.crawler import crawler
 
 
 def create_network():
+    data = {'nodes': {},
+            'links': []}
     network = nx.Graph()
     artists = crawler.get_all_artists_followed_by_all_users()
     for e in artists:
         for index in range(len(e['artists_followed'])):
             for index2 in range(index + 1, len(e['artists_followed'])):
                 add_edge(network, e['artists_followed'][index], e['artists_followed'][index2])
+                #attr = { e['artists_followed'][index] : { 'name' : } }
+                #nx.set_node_attributes(network, attr)
     return network
 
 

@@ -11,6 +11,7 @@
     <h1>Benvenuti nell'home page</h1>
     {% include 'bootstrap.html' %}
     <script src="{% static 'js/home.js' %}"></script>
+    <h1>{{request.refresh}}</h1>
     <script>setCookie("{{ request.refresh }}")</script>
 </body>
 </html>

@@ -1,0 +1,121 @@
+html {
+    margin: 0;
+    min-height: 100%;
+    width: 100%;
+}
+
+body {
+    background-image: linear-gradient(to bottom, #29323c, #485563);
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+#main{
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+h1 {
+    color: white;
+}
+
+#art{
+    background-color: transparent;
+    border: 1px solid #1DB954;
+    color: white;
+}
+
+.btn-outline-secondary{
+    background-color: transparent;
+    border-color: #1DB954;
+    color: white;
+}
+
+.btn-outline-secondary:hover{
+    background-color: #1DB954;
+}
+
+#pane{
+    margin: 1%;
+    min-height: 100%;
+}
+
+.link {
+    fill: none;
+    stroke: white;
+    stroke-width: 0.7px;
+    opacity: 0.4;
+}
+
+.node circle {
+    stroke: #000000;
+    stroke-width: 1px;
+}
+
+div.tooltip {
+     position: absolute;
+     background-color: white;
+     max-width: 200px;
+     height: auto;
+     padding: 1px;
+     border-style: solid;
+     border-radius: 4px;
+     border-width: 1px;
+     box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+     pointer-events: none;
+}
+
+text {
+    font: 10px sans-serif;
+    pointer-events: none;
+}
+
+div{
+    text-align: center;
+}
+
+h4{
+    color: white;
+}
+
+h5{
+    color: white;
+}
+
+.open {
+    background-color: #1DB954;
+    color: white;
+    border-radius: 30px;
+}
+
+p {
+    color: white;
+}
+
+#artistCard {
+    background-color: transparent;
+    border: 0;
+}
+
+#intro {
+    text-align: center;
+    padding: 3%;
+}
+
+.input-group-text {
+    color: white;
+    background-color: #1DB954;
+}
+
+.carousel-item{
+    text-align: center;
+}
+
+.carousel-img{
+    width: 55vh;
+    height: auto;
+}
+
+

@@ -38,29 +38,6 @@ sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIF
 #sp = spotipy.Spotify(access_token)
 
 
-def api_get_artist_by_id(id: str) -> Artist:
-    data = spotify.artist(id)
-    related = api_get_related(id)
-    tag = last.get_artist(data["name"]).get_top_tags() + data["genres"]
-    tags = []
-    for i in tag:
-        tags.append(str(i[0]))
-    for i in data['genres']:
-        tags.append(i)
-    try:
-        img = data['images'][2]['url']
-    except IndexError:
-        try:
-            img = data['images'][1]['url']
-        except IndexError:
-            try:
-                img = data['images'][0]['url']
-            except IndexError:
-                img = None
-    return Artist(id=data["id"], name=data["name"], genres=data["genres"], tags=tags, related=related,
-                  image=img, row=-1)
-
-
 def api_get_artist_by_name(name: str) -> Artist:
     id = api_get_id(name)
     return api_get_artist_by_id(id)
@@ -114,41 +91,12 @@ def db_get_artist_by_id(id: str):
         return None
 
 
-def db_insert_artist(artist_id: str, limit: int = None):
-    number_of_artists = db_artists.count_documents({})
-    number_of_tags = db_tags.count_documents({})
-    if limit is not None:
-        to_insert = [artist_id]
-        inserted = 0
-        retVal = {}
-        while len(to_insert) > 0 and inserted < limit:
-            actual = to_insert.pop(0)
-            dic = api_get_artist_by_id(actual).get_as_dict()
-            dic['row'] = number_of_artists
-            if db_artists.update_one({'_id': dic['_id']}, {'$setOnInsert': dic}, upsert=True).upserted_id is not None:
-                number_of_artists += 1
-                retVal[dic["_id"]] = dic
-                for tag in dic['tags']:
-                    if db_tags.update_one({'_id': tag},
-                                          {'$setOnInsert': {'_id': tag, 'column': number_of_tags}},
-                                          upsert=True).upserted_id is not None:
-                        number_of_tags += 1
-            inserted += 1
-            for x in dic["related"]:
-                to_insert.append(x)
-        return retVal
-    else:
-        art = api_get_artist_by_id(artist_id).get_as_dict()
-        if db_artists.update_one({'_id': art['_id']}, {'$setOnInsert': art}, upsert=True).upserted_id is not None:
-            number_of_artists += 1
-            for tag in art['tags']:
-                if db_tags.update_one({'_id': tag},
-                                      {'$setOnInsert': {'_id': tag, 'column': number_of_tags}},
-                                      upsert=True).upserted_id is not None:
-                    number_of_tags += 1
-            return art
-        else:
-            return None
+def db_insert_artist(artist_id: str):
+    print(artist_id)
+    art = api_get_artist_by_id(artist_id).get_as_dict()
+    print(art)
+    db_artists.update_one({'_id': art['_id']}, {'$setOnInsert': art}, upsert=True)
+
 
 
 def db_get_tag_by_artist_names(names: list) -> list:
@@ -281,6 +229,9 @@ def store_user(token):
 
     user_followed = get_users_followed(token)
     artists_followed = get_artist_followed(token)
+    for artist in artists_followed:
+        print(artist)
+        db_insert_artist(artist)
     art_id = []
     for artist in artists_followed:
         art_id.append(artist.id)
@@ -306,7 +257,10 @@ def get_artists_followed_by_user(user_id):
 
 
 def get_all_artists_followed_by_all_users():
-    result = db_users.find({}, {'artists_followed': 1, 'id': 1, '_id': 0})
+    result = db_users.find({}, {'artists_followed': 1, 'id': 1, '_id': 0, 'genres' : 1 , 'image' : 1 , 'name' : 1, 'tags' : 1})
+    for r in result:
+        print(r)
+
     return result
 
 
@@ -314,6 +268,10 @@ def get_all_users_followed_by_all_users():
     result = db_users.find({}, {'users_followed': 1, 'id': 1, '_id': 0})
     return result
 
+def get_artist_inf_from_db(id : str):
+    result = db_artists.find_one({'_id': id})
+    artist = Artist(id=result['_id'], name=result['name'],genres=result['genres'], related=result['related'], image=result['image'])
+    print(artist)
 
 def get_token(code):
     """
@@ -370,5 +328,21 @@ def refresh_token(code):
     print(response.json())
     return response.json()
 
+def api_get_artist_by_id(id: str) -> Artist:
+    data = spotify.artist(id)
+    related = api_get_related(id)
+    try:
+        img = data['images'][2]['url']
+    except IndexError:
+        try:
+            img = data['images'][1]['url']
+        except IndexError:
+            try:
+                img = data['images'][0]['url']
+            except IndexError:
+                img = None
+    return Artist(id=data["id"], name=data["name"], genres=data["genres"], related=related, image=img)
 
 
+
+#get_all_artists_followed_by_all_users()

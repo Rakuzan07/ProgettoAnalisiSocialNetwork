@@ -1,7 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from app.crawler import crawler
-
+from app.networks import artists_network
 
 # Create your views here.
 
@@ -21,7 +22,12 @@ def artist(request):
     # crawler.get_artist_followed()
     return render(request, 'artisti.html')
 
-
+def get_graph(request):
+    if request.is_ajax():
+        graph = artists_network.create_network()
+        return JsonResponse({"nodes": graph['data']['nodes'],
+                             "links": graph['data']['links'],
+                             "id": graph['data']['id']})
 def authenticate(request):
     try:
         code = request.COOKIES['code']
