@@ -78,10 +78,8 @@ class Artist:
             "_id": self.id,
             "name": self.name,
             "genres": self.genres,
-            "tags": self.tags,
             "related": self.related,
-            "image": self.image,
-            "row": self.row
+            "image": self.image
         }
         return x
 

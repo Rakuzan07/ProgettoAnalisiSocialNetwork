@@ -32,10 +32,11 @@ scope = ['user-follow-modify', 'user-follow-read']
 sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIFY_SECRET,
                         redirect_uri='http://localhost:8000/authenticate')
 
+
 # inizializzo sp
-#token_info = sp_oauth.get_access_token(code="", check_cache=False)
-#access_token = token_info["access_token"]
-#sp = spotipy.Spotify(access_token)
+# token_info = sp_oauth.get_access_token(code="", check_cache=False)
+# access_token = token_info["access_token"]
+# sp = spotipy.Spotify(access_token)
 
 
 def api_get_artist_by_name(name: str) -> Artist:
@@ -92,11 +93,8 @@ def db_get_artist_by_id(id: str):
 
 
 def db_insert_artist(artist_id: str):
-    print(artist_id)
     art = api_get_artist_by_id(artist_id).get_as_dict()
-    print(art)
     db_artists.update_one({'_id': art['_id']}, {'$setOnInsert': art}, upsert=True)
-
 
 
 def db_get_tag_by_artist_names(names: list) -> list:
@@ -231,7 +229,7 @@ def store_user(token):
     artists_followed = get_artist_followed(token)
     for artist in artists_followed:
         print(artist)
-        db_insert_artist(artist)
+        db_insert_artist(artist.id)
     art_id = []
     for artist in artists_followed:
         art_id.append(artist.id)
@@ -257,21 +255,30 @@ def get_artists_followed_by_user(user_id):
 
 
 def get_all_artists_followed_by_all_users():
-    result = db_users.find({}, {'artists_followed': 1, 'id': 1, '_id': 0, 'genres' : 1 , 'image' : 1 , 'name' : 1, 'tags' : 1})
-    for r in result:
-        print(r)
+    result = db_users.find({}, {'artists_followed': 1, '_id': 0, 'genres': 1, 'image': 1, 'name': 1, 'tags': 1})
+    ret_val = {}
+    for user in result:
+        art = []
+        artist_followed = user['artists_followed']
+        artists = db_artists.find({'_id': {'$in': artist_followed}})
+        for e in artists:
+            art.append(Artist(id=e['_id'], genres=e['genres'], name=e['name'], related=e['related'], image=e['image']))
+        ret_val[user['name']] = art
 
-    return result
+    return ret_val
 
 
 def get_all_users_followed_by_all_users():
     result = db_users.find({}, {'users_followed': 1, 'id': 1, '_id': 0})
     return result
 
-def get_artist_inf_from_db(id : str):
+
+def get_artist_inf_from_db(id: str):
     result = db_artists.find_one({'_id': id})
-    artist = Artist(id=result['_id'], name=result['name'],genres=result['genres'], related=result['related'], image=result['image'])
+    artist = Artist(id=result['_id'], name=result['name'], genres=result['genres'], related=result['related'],
+                    image=result['image'])
     print(artist)
+
 
 def get_token(code):
     """
@@ -328,6 +335,7 @@ def refresh_token(code):
     print(response.json())
     return response.json()
 
+
 def api_get_artist_by_id(id: str) -> Artist:
     data = spotify.artist(id)
     related = api_get_related(id)
@@ -342,7 +350,3 @@ def api_get_artist_by_id(id: str) -> Artist:
             except IndexError:
                 img = None
     return Artist(id=data["id"], name=data["name"], genres=data["genres"], related=related, image=img)
-
-
-
-#get_all_artists_followed_by_all_users()
