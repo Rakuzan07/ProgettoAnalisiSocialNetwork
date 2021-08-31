@@ -25,10 +25,8 @@ def artist(request):
 def authenticate(request):
     try:
         code = request.COOKIES['code']
-        print("TROVATO NEI COOKIES")
     except KeyError:
         code = request.GET.get('code')
-        print("TROVATO NELL URL")
 
     if code is None:
         print("Il cookie non è settato!")

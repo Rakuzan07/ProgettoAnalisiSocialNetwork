@@ -255,7 +255,7 @@ def get_users_followed(token):
     query = db_users.find({}, {'id': 1, '_id': False})
     ids = []
     for e in query:
-        print(ids.append(e['id']))
+        ids.append(e['id'])
 
     results = sp.current_user_following_users(ids)
 
@@ -291,7 +291,6 @@ def store_user(token):
         'users_followed': user_followed,
         'artists_followed': art_id
     }
-    print(user)
     db_users.update_one({'id': user['id']}, {'$set': user}, upsert=True)
 
 
