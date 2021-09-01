@@ -34,9 +34,9 @@ sp_oauth = SpotifyOAuth(scope=scope, client_id=SPOTIFY_KEY, client_secret=SPOTIF
 
 
 # inizializzo sp
-# token_info = sp_oauth.get_access_token(code="", check_cache=False)
-# access_token = token_info["access_token"]
-# sp = spotipy.Spotify(access_token)
+#token_info = sp_oauth.get_access_token(code="", check_cache=False)
+#access_token = token_info["access_token"]
+#sp = spotipy.Spotify(access_token)
 
 
 def api_get_artist_by_name(name: str) -> Artist:
@@ -93,8 +93,11 @@ def db_get_artist_by_id(id: str):
 
 
 def db_insert_artist(artist_id: str):
+    print(artist_id)
     art = api_get_artist_by_id(artist_id).get_as_dict()
+    print(art)
     db_artists.update_one({'_id': art['_id']}, {'$setOnInsert': art}, upsert=True)
+
 
 
 def db_get_tag_by_artist_names(names: list) -> list:
@@ -229,7 +232,7 @@ def store_user(token):
     artists_followed = get_artist_followed(token)
     for artist in artists_followed:
         print(artist)
-        db_insert_artist(artist.id)
+        db_insert_artist(artist)
     art_id = []
     for artist in artists_followed:
         art_id.append(artist.id)
@@ -350,3 +353,7 @@ def api_get_artist_by_id(id: str) -> Artist:
             except IndexError:
                 img = None
     return Artist(id=data["id"], name=data["name"], genres=data["genres"], related=related, image=img)
+
+
+
+#get_all_artists_followed_by_all_users()

@@ -10,19 +10,21 @@ def create_network():
     network = nx.Graph()
     artists = crawler.get_all_artists_followed_by_all_users()
     attr = {}
-    for artist in artists:
-        for index in range(len(artist)):
-            for index2 in range(index + 1, len(artist)):
-                add_edge(network, artist[index].id, artist[index2].id)
-                attr[artist[index].id] = {'name': artist[index].name,
-                                          'image': artist[index].image,
-                                          'genres': artist[index].genres,
-                                          'related': artist[index].related
+    print(artists)
+    for it in artists.keys():
+        artists_array=artists[it]
+        for index in range(len(artists_array)):
+            for index2 in range(index + 1, len(artists_array)):
+                add_edge(network, artists_array[index].id, artists_array[index2].id)
+                attr[artists_array[index].id] = {'name': artists_array[index].name,
+                                          'image': artists_array[index].image,
+                                          'genres': artists_array[index].genres,
+                                          'related': artists_array[index].related
                                           }
-                attr[artist[index2].id] = {'name': artist[index2].name,
-                                           'image': artist[index2].image,
-                                           'genres': artist[index2].genres,
-                                           'related': artist[index2].related
+                attr[artists_array[index2].id] = {'name': artists_array[index2].name,
+                                           'image': artists_array[index2].image,
+                                           'genres': artists_array[index2].genres,
+                                           'related': artists_array[index2].related
                                            }
 
     nx.set_node_attributes(network, attr)
