@@ -16,19 +16,21 @@ def create_network():
         for index in range(len(artists_array)):
             for index2 in range(index + 1, len(artists_array)):
                 add_edge(network, artists_array[index].id, artists_array[index2].id)
-                attr[artists_array[index].id] = {'name': artists_array[index].name,
+                data['links'].append({'source' : artists_array[index].id, 'target' : artists_array[index2].id})
+                data['nodes'][artists_array[index].id] = {'name': artists_array[index].name,
                                           'image': artists_array[index].image,
                                           'genres': artists_array[index].genres,
                                           'related': artists_array[index].related
                                           }
-                attr[artists_array[index2].id] = {'name': artists_array[index2].name,
+                data['nodes'][artists_array[index2].id] = {'name': artists_array[index2].name,
                                            'image': artists_array[index2].image,
                                            'genres': artists_array[index2].genres,
                                            'related': artists_array[index2].related
                                            }
 
-    nx.set_node_attributes(network, attr)
-    return network
+    #nx.set_node_attributes(network, data)
+
+    return {'graph' : network, 'data' : data}
 
 
 def add_edge(network: nx.Graph, node1, node2):
@@ -49,6 +51,6 @@ def draw_network(network: nx.Graph):
 # TODO: Recommender system
 
 
-n = create_network()
-nx.draw_networkx(n)
-plt.show()
+#n = create_network()['graph']
+#nx.draw_networkx(n)
+#plt.show()

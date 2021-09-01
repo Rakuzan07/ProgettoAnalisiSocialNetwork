@@ -93,9 +93,7 @@ def db_get_artist_by_id(id: str):
 
 
 def db_insert_artist(artist_id: str):
-    print(artist_id)
     art = api_get_artist_by_id(artist_id).get_as_dict()
-    print(art)
     db_artists.update_one({'_id': art['_id']}, {'$setOnInsert': art}, upsert=True)
 
 
@@ -231,7 +229,6 @@ def store_user(token):
     user_followed = get_users_followed(token)
     artists_followed = get_artist_followed(token)
     for artist in artists_followed:
-        print(artist)
         db_insert_artist(artist)
     art_id = []
     for artist in artists_followed:
@@ -280,7 +277,6 @@ def get_artist_inf_from_db(id: str):
     result = db_artists.find_one({'_id': id})
     artist = Artist(id=result['_id'], name=result['name'], genres=result['genres'], related=result['related'],
                     image=result['image'])
-    print(artist)
 
 
 def get_token(code):
@@ -307,7 +303,6 @@ def get_token(code):
         headers=headers
     )
 
-    print(response.json())
     return response.json()
 
 
@@ -335,7 +330,6 @@ def refresh_token(code):
         headers=headers
     )
 
-    print(response.json())
     return response.json()
 
 

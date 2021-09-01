@@ -1,21 +1,15 @@
-function render_graph(name) {
+function render_graph() {
     $("#graphDiv").html(`<div class='spinner-grow'  style='color: #1DB954; margin-top: 40%;' role='status'>  <span class='sr-only'>Retrieving data...</span></div>
                                  <p>Sto caricando...</p>`);
-    let diameter = 3;
-    if(name===null){
-        name = $("#art").val();
-        diameter = $("#type").val();
-    }
+    // let diameter = 3;
     $.ajax({
             type: 'GET',
             url: '/get_graph/',
             data: {
-                "name": name,
-                "diameter" : diameter,
             },
             dataType: 'json',
             success: function (result) {
-
+            console.log(result);
                 $("#graphDiv").html("");
                 $("#sidebar").css("background-color", "#29323c").css("border", "1px solid black").css("border-radius", "10px")
                     .css("padding-top", "1%").css("height", "100vh");
@@ -24,7 +18,7 @@ function render_graph(name) {
                         .append('<iframe id="player" src="https://open.spotify.com/embed/playlist/37i9dQZEVXbMDoHDwVN2tF" style="margin-top: 5%;" width="280" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>');
                     $("#artistCard").css("height", "60%");
                 }
-                drawArtistsGraph(result["links"], result["nodes"], name, result["id"]);
+                drawArtistsGraph(result["links"], result["nodes"]);
                 window.scrollTo(0, document.body.scrollHeight);
             },
             error: function (jqXHR) {
@@ -34,8 +28,8 @@ function render_graph(name) {
 
 }
 
-function drawArtistsGraph(links, Nodes, name, id){
-    first_info(id);
+function drawArtistsGraph(links, Nodes){
+    first_info(Object.keys(Nodes)[0]);
     let nodes = {};
 
     links.forEach(function (link) {
@@ -50,8 +44,8 @@ function drawArtistsGraph(links, Nodes, name, id){
         .nodes(d3.values(nodes))
         .links(links)
         .size([width, height])
-        .linkDistance(20)
-        .charge(-350)
+        .linkDistance(150)
+        .charge(-1000)
         .on("tick", tick)
         .start();
 
@@ -60,25 +54,34 @@ function drawArtistsGraph(links, Nodes, name, id){
         .attr("width", width)
         .attr("height", height);
 
-    svg.append("text").attr("x", 10).attr("y", 10).text("Distances:")
+    svg.append("text").attr("x", 10).attr("y", 10).text("Genres:")
         .style("font-size", "15px").style("fill", "white").attr("alignment-baseline","middle");
     svg.append("circle").attr("cx",20).attr("cy",30).attr("r", 6).style("fill", "#FF0000");
-    svg.append("circle").attr("cx",20).attr("cy",60).attr("r", 6).style("fill", '#7c9ecc');
-    svg.append("circle").attr("cx",20).attr("cy",90).attr("r", 6).style("fill", '#2271b3');
-    svg.append("circle").attr("cx",20).attr("cy",120).attr("r", 6).style("fill", '#214b74');
-    svg.append("circle").attr("cx",20).attr("cy",150).attr("r", 6).style("fill", '#18273a');
-    svg.append("circle").attr("cx",20).attr("cy",180).attr("r", 6).style("fill", '#111720');
-    svg.append("text").attr("x", 30).attr("y", 30).text("0").style("font-size", "15px")
+    svg.append("circle").attr("cx",20).attr("cy",60).attr("r", 6).style("fill", '#ff9900');
+    svg.append("circle").attr("cx",20).attr("cy",90).attr("r", 6).style("fill", '#0066ff');
+    svg.append("circle").attr("cx",20).attr("cy",120).attr("r", 6).style("fill", '#cc00cc');
+    svg.append("circle").attr("cx",20).attr("cy",150).attr("r", 6).style("fill", '#00cc00');
+    svg.append("circle").attr("cx",20).attr("cy",180).attr("r", 6).style("fill", '#ffff00');
+    svg.append("circle").attr("cx",20).attr("cy",210).attr("r", 6).style("fill", '#66ffff');
+    svg.append("circle").attr("cx",20).attr("cy",240).attr("r", 6).style("fill", '#ff99ff');
+    svg.append("circle").attr("cx",20).attr("cy",270).attr("r", 6).style("fill", '#e6e6e6');
+    svg.append("text").attr("x", 30).attr("y", 35).text("Rock/Metal").style("font-size", "15px")
         .style("fill", "white").attr("alignment-baseline","middle");
-    svg.append("text").attr("x", 30).attr("y", 60).text("1").style("font-size", "15px")
+    svg.append("text").attr("x", 30).attr("y", 65).text("Latina").style("font-size", "15px")
         .style("fill", "white").attr("alignment-baseline","middle");
-    svg.append("text").attr("x", 30).attr("y", 90).text("2").style("font-size", "15px")
+    svg.append("text").attr("x", 30).attr("y", 95).text("Pop/Hip-Hop").style("font-size", "15px")
         .style("fill", "white").attr("alignment-baseline","middle");
-    svg.append("text").attr("x", 30).attr("y", 120).text("3").style("font-size", "15px")
+    svg.append("text").attr("x", 30).attr("y", 125).text("Dance/Electronic").style("font-size", "15px")
         .style("fill", "white").attr("alignment-baseline","middle");
-    svg.append("text").attr("x", 30).attr("y", 150).text("4").style("font-size", "15px")
+    svg.append("text").attr("x", 30).attr("y", 155).text("Indie").style("font-size", "15px")
         .style("fill", "white").attr("alignment-baseline","middle");
-    svg.append("text").attr("x", 30).attr("y", 180).text("5").style("font-size", "15px")
+    svg.append("text").attr("x", 30).attr("y", 185).text("Funk").style("font-size", "15px")
+        .style("fill", "white").attr("alignment-baseline","middle");
+    svg.append("text").attr("x", 30).attr("y", 215).text("Blues").style("font-size", "15px")
+        .style("fill", "white").attr("alignment-baseline","middle");
+    svg.append("text").attr("x", 30).attr("y", 245).text("Jazz").style("font-size", "15px")
+        .style("fill", "white").attr("alignment-baseline","middle");
+    svg.append("text").attr("x", 30).attr("y", 275).text("Other").style("font-size", "15px")
         .style("fill", "white").attr("alignment-baseline","middle");
 
     var link = svg.selectAll(".link")
@@ -163,9 +166,19 @@ function drawArtistsGraph(links, Nodes, name, id){
     }
 
     function get_color(d) {
-        var path = Nodes[d.name].path;
-        var color = ['#FF0000', '#7c9ecc', '#2271b3', '#214b74', '#18273a' , '#111720'];
-        return color[path]
+        var genres = Nodes[d.name].genres;
+        let color= '#e6e6e6';
+        for ( let i =0; i< genres.length ; i++){
+            if (genres[i].toLowerCase().includes("rock")|| genres[i].toLowerCase().includes("metal")) return '#ff0000';
+            if (genres[i].toLowerCase().includes("latina") || genres[i].toLowerCase().includes("reggaeton")) return '#ff9900';
+            if (genres[i].toLowerCase().includes("pop") || genres[i].toLowerCase().includes("hip") || genres[i].toLowerCase().includes('R&B')) return '#0066ff';
+            if (genres[i].toLowerCase().includes("dance") || genres[i].toLowerCase().includes("house") ||  genres[i].toLowerCase().includes("elettronica")) return '#cc00cc';
+            if (genres[i].toLowerCase().includes("indie")) return '#00cc00';
+            if (genres[i].toLowerCase().includes("funk")) return '#ffff00';
+            if (genres[i].toLowerCase().includes("blues")) return '#66ffff';
+            if (genres[i].toLowerCase().includes("jazz")) return '#ff99ff';
+        }
+        return color;
     }
 
     function show_info(d) {

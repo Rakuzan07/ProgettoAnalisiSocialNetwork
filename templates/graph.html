@@ -10,11 +10,9 @@
 </head>
 <body>
 <script>renderNav('graph')</script>
-    {% if request.artist %}
-        <script>
-            render_graph("{{ request.artist }}");
+       <script>
+            render_graph();
         </script>
-    {% endif %}
 
     <div id="main">
         <div id="intro">
@@ -52,10 +50,10 @@
 
 
 
-        <h1 class="font-weight-light" style="margin-top: 2%; font-size: 2rem;">Per iniziare, inserisci il nome di un artista e il raggio del grafo!</h1>
+         <!--  <h1 class="font-weight-light" style="margin-top: 2%; font-size: 2rem;">Per iniziare, inserisci il nome di un artista e il raggio del grafo!</h1>
         <div class="input-group mb-3" style="padding: 2%;">
             <div class="input-group-prepend">
-                <label class="input-group-text" for="type">Raggio</label>
+              <label class="input-group-text" for="type">Raggio</label>
                 <select class="custom-select" id="type" style="border-color: #1DB954;">
                 <option selected>1</option>
                 <option value='2'>2</option>
@@ -69,7 +67,7 @@
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id="render" onclick="render_graph(null);"><i class="fas fa-search"></i></button>
             </div>
-        </div>
+        </div> -->
         <div class="row" id="pane">
             <div class="col-lg-3" id="sidebar"></div>
             <div class="col-lg-9" id="graphDiv"></div>

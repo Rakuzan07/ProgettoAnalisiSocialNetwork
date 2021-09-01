@@ -25,9 +25,21 @@ def artist(request):
 def get_graph(request):
     if request.is_ajax():
         graph = artists_network.create_network()
+        #print('value 1 '+graph['data']['nodes']+"  value2 "+graph['data']['links'])
         return JsonResponse({"nodes": graph['data']['nodes'],
-                             "links": graph['data']['links'],
-                             "id": graph['data']['id']})
+                             "links": graph['data']['links']})
+
+def graph(request):
+    return render(request, 'graph.html')
+
+def get_last_album(request):
+    if request.is_ajax():
+        data = crawler.spotify.artist_albums(artist_id=request.GET.get('id'), limit=1)
+        url = data['items'][0]['external_urls']['spotify']
+        ins = url.find('/album')
+        return JsonResponse({'url': url[:ins] + '/embed' + url[ins:]})
+
+
 def authenticate(request):
     try:
         code = request.COOKIES['code']
