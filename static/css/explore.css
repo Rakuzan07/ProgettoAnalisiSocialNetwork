@@ -1,0 +1,146 @@
+html {
+    margin: 0;
+    min-height: 100%;
+    width: 100%;
+}
+
+body {
+    background-image: linear-gradient(to bottom, #29323c, #485563);
+    min-height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+
+
+#pane{
+    margin: 1%;
+}
+
+#render:hover{
+    background-color: #191414;
+    border-color: #191414;
+    color: #1DB954;
+}
+
+#render{
+    background-color: white;
+    color: #1DB954;
+}
+
+#main{
+    min-height: 100%;
+    width: 100%;
+}
+
+
+p{
+    color: white;
+}
+
+h2 {
+    color: white;
+    margin-left: 2%;
+}
+
+h6 {
+    color: white;
+}
+
+.display-4 {
+    color: white;
+}
+
+.card{
+    text-align: center;
+    background-color: transparent;
+    height: 200px;
+    margin-bottom: 3%;
+}
+
+#artistsDiv {
+    margin: 0;
+}
+
+.dropdown-item:active {
+    background-color: #1DB954;
+}
+
+.card-title {
+    color: white;
+}
+
+.col-lg-3 {
+    height: 25vw;
+    margin-bottom: 2%;
+    margin-top: 1%;
+}
+
+.card{
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 0;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 20vw;
+    object-fit: cover;
+}
+
+#playerDiv{
+    text-align: center;
+    margin-top: 1%;
+}
+
+.open {
+    background-color: #1DB954;
+    color: white;
+    border-radius: 30px;
+}
+
+.dropdown-toggle{
+    background-color: #1DB954;
+    color: white;
+    border-radius: 30px;
+}
+
+.flip-card{
+    perspective: 1000px;
+    background-color: transparent;
+}
+
+
+.flip-card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    transition: transform 1s;
+    transform-style: preserve-3d;
+}
+
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+
+.flip-card-back {
+    border-radius: 3px;
+    width: 100%;
+    height: 100%;
+    background-color: #29323c;
+    color: white;
+    transform: rotateY(180deg);
+}

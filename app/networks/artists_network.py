@@ -50,7 +50,33 @@ def draw_network(network: nx.Graph):
 # TODO: Gestire parte grafica
 # TODO: Recommender system
 
+def create_users_network():
+    data = {'nodes': {},
+            'links': []}
+    network = nx.Graph()
+    artists = crawler.get_all_artists_followed_by_all_users()
+    attr = {}
+    print(artists)
+    for it in artists.keys():
+        artists_array=artists[it]
+        for index in range(len(artists_array)):
+            for index2 in range(index + 1, len(artists_array)):
+                add_edge(network, artists_array[index].id, artists_array[index2].id)
+                data['links'].append({'source' : artists_array[index].id, 'target' : artists_array[index2].id})
+                data['nodes'][artists_array[index].id] = {'name': artists_array[index].name,
+                                          'image': artists_array[index].image,
+                                          'genres': artists_array[index].genres,
+                                          'related': artists_array[index].related
+                                          }
+                data['nodes'][artists_array[index2].id] = {'name': artists_array[index2].name,
+                                           'image': artists_array[index2].image,
+                                           'genres': artists_array[index2].genres,
+                                           'related': artists_array[index2].related
+                                           }
 
+    #nx.set_node_attributes(network, data)
+
+    return {'graph' : network, 'data' : data}
 #n = create_network()['graph']
 #nx.draw_networkx(n)
 #plt.show()

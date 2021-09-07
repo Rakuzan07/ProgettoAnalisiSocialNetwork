@@ -1,17 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
-    {% load static %}
     <meta charset="UTF-8">
-    <title>Home</title>
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <title>Scoutify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include 'include.html' %}
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/explore.css' %}">
+    <script src="{% static 'js/explore.js' %}"></script>
+     <script src="{% static 'js/home.js' %}"></script>
+
 </head>
 <body>
+{% csrf_token %}
 
-    <h1>Benvenuti nell'home page</h1>
-    {% include 'bootstrap.html' %}
-    <script src="{% static 'js/home.js' %}"></script>
-    <h1>{{request.refresh}}</h1>
+    <div id="main">
+
+        <script>renderNav('explore')</script>
+
+        <div id="pane">
+                <div class="row" style="margin: 0;">
+                    <h1 id='TopArtists' class="display-4">Top Artists Global</h1>
+                    <div class="dropdown dropright show" style="margin: 1.5%;">
+                          <a style="background-color: #1DB954;" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Cambia paese
+                          </a>
+
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Global');">Global</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Italia');">Italia</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'USA');">Usa</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Regno Unito');">Regno Unito</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Spagna');">Spagna</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Germania');">Germania</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Australia');">Australia</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Francia');">Francia</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Irlanda');">Irlanda</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Belgio');">Belgio</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Portogallo');">Portogallo</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Canada');">Canada</button>
+                              <button class="dropdown-item" type="button" onclick="render_top_artists({{ request.client }}, 'Messico');">Messico</button>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+        <script type="text/javascript">
+            var token = {{ request.client|safe }}
+                render_top_artists(token, 'Global');
+        </script>
+                <div id="artistsDiv" class="row" ></div>
+                <div id="playerDiv">
+                    <iframe id='player' src="" width='550' height='80' frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                </div>
+
+    </div>
+
+
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>AOS.init();</script>
     <script>setCookie("{{ request.refresh }}")</script>
 </body>
 </html>

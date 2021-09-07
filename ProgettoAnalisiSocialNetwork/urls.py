@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^artist/$', views.artist, name="artist"),
     url(r'^authenticate/$', views.authenticate, name="authenticate"),
     url(r'^get_graph/$', views.get_graph, name="get_graph"),
+    url(r'^get_user_graph/$', views.get_user_graph, name="get_user_graph"),
     url(r'^graph/$', views.graph, name="graph"),
+    url(r'^users_graph/$', views.users_graph, name="users_graph"),
     url(r'^get_last_album/$', views.get_last_album, name="get_last_album")
 ]

@@ -4,6 +4,7 @@ import pylast
 import pymongo
 import spotipy
 from app.crawler.beans.artist import *
+from app.crawler.beans.user_info import *
 from spotipy.oauth2 import SpotifyClientCredentials
 from app.crawler.utils.Sha256Cipher import SHA256Cipher
 from spotipy.oauth2 import SpotifyOAuth
@@ -229,7 +230,7 @@ def store_user(token):
     user_followed = get_users_followed(token)
     artists_followed = get_artist_followed(token)
     for artist in artists_followed:
-        db_insert_artist(artist)
+        db_insert_artist(artist.id)
     art_id = []
     for artist in artists_followed:
         art_id.append(artist.id)
@@ -272,6 +273,24 @@ def get_all_users_followed_by_all_users():
     result = db_users.find({}, {'users_followed': 1, 'id': 1, '_id': 0})
     return result
 
+def users_connectivity():
+    result = db_users.find({}, {'users_followed': 1, '_id': 0, 'id': 1, 'image': 1, 'name': 1})
+    ret_val = {}
+    for user in result:
+        users = []
+        users_followed = user['users_followed']
+        #end = db_artists.find({'_id': {'$in': artist_followed}})
+
+        for end_user in result:
+            for index in range(len(users_followed)):
+                if users_followed[index]==end_user['id']:
+                    users.append(User_Info(id=end_user['id'], name=end_user['name'], image=end_user['image']))
+        ret_val[user['name']] = users
+    return ret_val
+
+def user_info():
+    result = db_users.find({}, {'users_followed': 1, '_id': 0, 'id': 1, 'image': 1, 'name': 1})
+    return result
 
 def get_artist_inf_from_db(id: str):
     result = db_artists.find_one({'_id': id})
@@ -351,3 +370,4 @@ def api_get_artist_by_id(id: str) -> Artist:
 
 
 #get_all_artists_followed_by_all_users()
+print(user_info())
