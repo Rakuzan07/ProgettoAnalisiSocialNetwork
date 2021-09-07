@@ -171,10 +171,6 @@ def get_artists_by_row() -> dict:
     return ret_val
 
 
-def get_row(id: str) -> int:
-    data = db_artists.find_one({'_id': id})
-    return data['row']
-
 
 def user_exist(username: str, password: str) -> bool:
     sha_pass = SHA256Cipher(password)
@@ -195,6 +191,10 @@ def get_artist_followed(token):
                         image=art['images'][len(art['images']) - 1]['url'])
         artists.append(artist)
     return artists
+
+
+def db_user(user_id):
+    return db_users.find_one({'id': user_id})
 
 
 def get_users_followed(token):
@@ -256,7 +256,7 @@ def get_artists_followed_by_user(user_id):
 
 
 def get_all_artists_followed_by_all_users():
-    result = db_users.find({}, {'artists_followed': 1, '_id': 0, 'genres': 1, 'image': 1, 'name': 1, 'tags': 1})
+    result = db_users.find({}, {'artists_followed': 1, '_id': 0, 'genres': 1, 'image': 1, 'name': 1, 'tags': 1, 'id': 1})
     ret_val = {}
     for user in result:
         art = []
@@ -264,7 +264,7 @@ def get_all_artists_followed_by_all_users():
         artists = db_artists.find({'_id': {'$in': artist_followed}})
         for e in artists:
             art.append(Artist(id=e['_id'], genres=e['genres'], name=e['name'], related=e['related'], image=e['image']))
-        ret_val[user['name']] = art
+        ret_val[user['id']] = art
 
     return ret_val
 

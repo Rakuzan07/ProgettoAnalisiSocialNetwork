@@ -1,0 +1,35 @@
+.navLink {
+    color: white;
+}
+
+.navLink:hover {
+    color: #1DB954;
+}
+
+.navLinkActive {
+    color: #1DB954;
+}
+
+.navbar {
+    background-color: transparent;
+    padding-right: 10%;
+}
+
+.navbar img{
+    width: 55%;
+    margin-left: 15%;
+}
+
+.navbar a{
+    font-size: 1.5rem;
+}
+.navBtn {
+    color: white;
+    border: none;
+}
+.navBtn:hover{
+    color: #1DB954;
+}
+
+
+

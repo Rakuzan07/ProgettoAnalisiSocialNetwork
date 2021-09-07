@@ -10,8 +10,11 @@ def create_network():
     network = nx.Graph()
     artists = crawler.get_all_artists_followed_by_all_users()
     attr = {}
-    print(artists)
     for it in artists.keys():
+        """if it == 'pjasn-user2':
+            for art in artists[it]:
+                print(art.id)"""
+
         artists_array=artists[it]
         for index in range(len(artists_array)):
             for index2 in range(index + 1, len(artists_array)):

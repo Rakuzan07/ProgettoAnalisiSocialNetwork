@@ -6,51 +6,51 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/ca78d5a4ec.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
-<link rel="icon" href="{% static 'img/Logo.png' %}">
+<link rel="icon" href="{% static 'images/Logo.png' %}">
 <script>
     function renderNav(active) {
     if(active === 'home'){
         $("#main").html("<nav class=\"navbar\">\n" +
         "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'img/Logo.png' %}\">\n" +
+        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
         "            </a>\n" +
         "            <a class=\"navLink navLinkActive nav-link\" href=\"/home\">Home</a>\n" +
             "            <a class=\"navLink nav-link\" href=\"/explore\">Explore</a>\n" +
         "            <a class=\"navLink nav-link\" href=\"/graph\" >Graph Visualization</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/recommender\">Recommendations</a>\n" +
+        "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
         "        </nav>\n" )
     }
     else if(active === 'explore'){
         $("#main").html("<nav class=\"navbar\">\n" +
         "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'img/Logo.png' %}\">\n" +
+        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
         "            </a>\n" +
         "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
             "            <a class=\"navLink navLinkActive nav-link\" href=\"/explore\">Explore</a>\n" +
         "            <a class=\"navLink nav-link\" href=\"/graph\" >Graph Visualization</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/recommender\">Recommendations</a>\n" +
+        "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
         "        </nav>\n")
     }
     else if(active === 'graph'){
         $("body").html("<nav class=\"navbar\">\n" +
         "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'img/Logo.png' %}\">\n" +
+        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
         "            </a>\n" +
         "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
                 "            <a class=\"navLink nav-link\" href=\"/explore\">Explore</a>\n" +
         "            <a class=\"navLink navLinkActive nav-link\" href=\"/graph\" >Graph Visualization</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/recommender\">Recommendations</a>\n" +
+        "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
         "        </nav>\n")
     }
     else if(active === 'recommender'){
         $("body").html("<nav class=\"navbar\">\n" +
         "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'img/Logo.png' %}\">\n" +
+        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
         "            </a>\n" +
         "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
                 "            <a class=\"navLink nav-link\" href=\"/explore\">Explore</a>\n" +
         "            <a class=\"navLink nav-link\" href=\"/graph\" >Graph Visualization</a>\n" +
-        "            <a class=\"navLink navLinkActive nav-link\" href=\"/recommender\">Recommendantions</a>\n" +
+        "            <a class=\"navLink navLinkActive nav-link\" href=\"/recommendations\">Recommendantions</a>\n" +
         "        </nav>\n")
     }
 }

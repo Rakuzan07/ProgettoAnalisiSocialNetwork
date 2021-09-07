@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+    <meta charset="UTF-8">
+    <title>Scoutify</title>
+    {% include 'include.html' %}
+    <link rel="stylesheet" href="{% static 'css/recommender.css' %}">
+    <script src="{% static 'js/recommender.js' %}"></script>
+</head>
+<body>
+    <script>renderNav('recommender')</script>
+    <div id="main">
+
+        <div class="row" id = "boxesDiv">
+            <div class="col-lg-6 boxes">
+                <div class="card">
+                    <div class="card-header">
+                        <img id="played" active="true" alt="" class="img-active boxes-img img-fluid rounded" src="{% static 'images/listening.jpg' %}">
+                        <div class="boxes-icon"><i class="fas fa-4x fa-headphones" ></i></div>
+                    </div>
+                    <div class="card-footer footer1">
+                        <p id="p1" style="font-weight: bold;">Suggerimenti basati sull'amicizia</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 boxes">
+                <div class="card">
+                    <div class="card-header">
+                        <img id="artists" active="false" alt="" class="boxes-img img-fluid rounded"
+                        src="{% static 'images/singing.jpg' %}">
+                        <div class="boxes-icon"><i class="fas fa-4x fa-guitar"></i></div>
+                    </div>
+                    <div class="card-footer footer1">
+                            <p id="p2">Suggerimenti basati sugli artisti seguiti</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="pane">
+            <script>played_rec();</script>
+        </div>
+    </div>
+
+</body>

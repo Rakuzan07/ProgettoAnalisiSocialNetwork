@@ -3,6 +3,8 @@ from django.shortcuts import render
 
 from app.crawler import crawler
 from app.networks import artists_network
+from app.recommender import recommender
+
 from app.networks import users_network
 
 # Create your views here.
@@ -23,6 +25,7 @@ def artist(request):
     # crawler.get_artist_followed()
     return render(request, 'artisti.html')
 
+
 def get_graph(request):
     if request.is_ajax():
         graph = artists_network.create_network()
@@ -37,11 +40,13 @@ def get_user_graph(request):
         return JsonResponse({"nodes": graph['data']['nodes'],
                              "links": graph['data']['links']})
 
+
 def graph(request):
     return render(request, 'graph.html')
 
 def users_graph(request):
     return render(request, 'users_graph.html')
+
 
 def get_last_album(request):
     if request.is_ajax():
@@ -67,3 +72,33 @@ def authenticate(request):
 
         request.__setattr__('refresh', refresh_token)
     return render(request, 'home.html')
+
+
+def followship_recommender(request):
+    token = None
+    try:
+        token = request.COOKIES['refresh_token']
+    except KeyError:
+        print("Il cookie non è settato!")
+
+    recommended = {}
+    if token is not None:
+        recommended = recommender.followship_recommendations(token)
+    return JsonResponse(recommended)
+
+
+def artists_recommender(request):
+    token = None
+    try:
+        token = request.COOKIES['refresh_token']
+    except KeyError:
+        print("Il cookie non è settato!")
+
+    recommended = {}
+    if token is not None:
+        recommended = recommender.artist_recommender(token)
+    return JsonResponse(recommended)
+
+
+def recommendations(request):
+    return render(request, 'recommender.html')
