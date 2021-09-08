@@ -40,6 +40,7 @@ def get_user_graph(request):
     if request.is_ajax():
         graph = users_network.create_network()
         #print('value 1 '+graph['data']['nodes']+"  value2 "+graph['data']['links'])
+        print(graph['data']['nodes'])
         return JsonResponse({"nodes": graph['data']['nodes'],
                              "links": graph['data']['links']})
 

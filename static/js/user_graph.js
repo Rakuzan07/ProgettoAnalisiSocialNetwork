@@ -55,8 +55,7 @@ function drawArtistsGraph(links, Nodes){
         .attr("width", width)
         .attr("height", height);
 
-    svg.append("text").attr("x", 10).attr("y", 10).text("Genres:")
-        .style("font-size", "15px").style("fill", "white").attr("alignment-baseline","middle");
+
 
 
     var link = svg.selectAll(".link")
