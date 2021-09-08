@@ -24,8 +24,25 @@ def artist_recommender(token):
                 medium.add(neighbor)
             else:
                 high.add(neighbor)
-    artists_weighted = {'small': small, 'medium': medium, 'high': high}
-    return artists_weighted
+
+    ret_val = []
+    h = list(high)
+    m = list(medium)
+    s = list(small)
+    while len(ret_val) < 18:
+        if len(h) > 0:
+            ret_val.append(h.pop(0))
+        elif len(m) > 0:
+            ret_val.append(m.pop(0))
+        elif len(s) > 0:
+            ret_val.append(s.pop(0))
+        else:
+            break
+
+    art = []
+    for artist in ret_val:
+        art.append(crawler.db_get_artist_by_id(artist).get_as_dict())
+    return art
 
 
 def followship_recommendations(token):
@@ -70,9 +87,9 @@ def followship_recommendations(token):
 
 
 def create_info(artists_id):
-    ret_val = {}
+    ret_val = []
     for artist in artists_id:
         info = crawler.db_get_artist_by_id(artist).get_as_dict()
-        ret_val[info['_id']] = info
+        ret_val.append(info)
 
     return ret_val

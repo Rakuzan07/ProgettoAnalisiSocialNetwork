@@ -23,6 +23,3 @@ def create_network():
     # nx.set_node_attributes(network, data)
     return {'graph': network, 'data': data}
 
-network = create_network()
-nx.draw_networkx(network['graph'])
-plt.show()

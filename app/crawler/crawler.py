@@ -87,7 +87,7 @@ def get_recently_played(token, limit: int = None):
 def db_get_artist_by_id(id: str):
     a = db_artists.find_one({"_id": id})
     if a is not None:
-        retVal = Artist(a["_id"], a["name"], a["genres"], a["tags"], a["related"], a["image"], a['row'])
+        retVal = Artist(id=a["_id"], name=a["name"], genres=a["genres"], related=a["related"], image=a["image"])
         return retVal
     else:
         return None

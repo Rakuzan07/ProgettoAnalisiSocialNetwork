@@ -74,7 +74,7 @@ def authenticate(request):
     return render(request, 'home.html')
 
 
-def followship_recommender(request):
+def foll_rec(request):
     token = None
     try:
         token = request.COOKIES['refresh_token']
@@ -84,7 +84,7 @@ def followship_recommender(request):
     recommended = {}
     if token is not None:
         recommended = recommender.followship_recommendations(token)
-    return JsonResponse(recommended)
+    return JsonResponse(recommended, safe=False)
 
 
 def artists_recommender(request):
@@ -97,8 +97,13 @@ def artists_recommender(request):
     recommended = {}
     if token is not None:
         recommended = recommender.artist_recommender(token)
-    return JsonResponse(recommended)
+    return JsonResponse(recommended, safe=False)
 
 
 def recommendations(request):
     return render(request, 'recommender.html')
+
+
+def art_rec(request):
+    ret_val = recommender.artist_recommender(request.COOKIES['refresh_token'])
+    return JsonResponse(ret_val, safe=False)

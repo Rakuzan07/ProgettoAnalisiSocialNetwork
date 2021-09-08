@@ -30,7 +30,8 @@ urlpatterns = [
     url(r'^graph/$', views.graph, name="graph"),
     url(r'^users_graph/$', views.users_graph, name="users_graph"),
     url(r'^get_last_album/$', views.get_last_album, name="get_last_album"),
-    url(r'^followship_recommender/$', views.followship_recommender, name="foll_rec"),
+    url(r'^foll_rec/$', views.foll_rec, name="foll_rec"),
     url(r'^artists_recommender/$', views.artists_recommender, name="art_rec"),
     url(r'^recommendations/$', views.recommendations, name="fo_rec"),
+    url(r'^art_recommender/$', views.art_rec, name="art_rec"),
 ]
