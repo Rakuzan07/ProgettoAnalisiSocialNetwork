@@ -6,6 +6,7 @@ from app.networks import artists_network
 from app.recommender import recommender
 
 from app.networks import users_network
+import json
 
 # Create your views here.
 
@@ -18,6 +19,8 @@ def login(request):
 
 
 def home(request):
+    token = json.dumps(crawler.client_credentials_manager.get_access_token())
+    request.__setattr__('client', token)
     return render(request, 'home.html')
 
 
@@ -40,6 +43,11 @@ def get_user_graph(request):
         return JsonResponse({"nodes": graph['data']['nodes'],
                              "links": graph['data']['links']})
 
+
+def explore(request):
+    token = json.dumps(crawler.client_credentials_manager.get_access_token())
+    request.__setattr__('client', token)
+    return render(request, 'home.html')
 
 def graph(request):
     return render(request, 'graph.html')
@@ -71,6 +79,8 @@ def authenticate(request):
         crawler.store_user(refresh_token)
 
         request.__setattr__('refresh', refresh_token)
+        token = json.dumps(crawler.client_credentials_manager.get_access_token())
+        request.__setattr__('client', token)
     return render(request, 'home.html')
 
 
