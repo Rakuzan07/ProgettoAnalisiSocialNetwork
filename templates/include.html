@@ -8,56 +8,135 @@
 <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 <link rel="icon" href="{% static 'images/Logo.png' %}">
 <script>
+    function getCookie(cname) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return null;
+    }
+
+    function login() {
+        window.location = 'http://localhost:8000/login'
+    }
+
+    function logout() {
+       document.cookie = "code=; MAX-Age=0; path=/";
+       document.cookie = "refresh_token=; MAX-Age=0; Exipirespath=/";
+       location.reload();
+    }
     function renderNav(active) {
-        console.log('entrato 1');
-    if(active === 'home'){
-        $("#main").html("<nav class=\"navbar\">\n" +
-        "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
-        "            </a>\n" +
-        "            <a class=\"navLink navLinkActive nav-link\" href=\"/home\">Home</a>\n" +
-            "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/graph\" >Artists Network</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
-        "             <button class=\"btn  \" style=\"background-color:#1DB954;color:white;border-radius:10%;\">Login</button>\n" +
-        "        </nav>\n" )
-    }
-    else if(active == 'test'){
-        $("body").html("<nav class=\"navbar\">\n" +
-        "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
-        "            </a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
-            "            <a class=\"navLink navLinkActive nav-link\" href=\"/users_graph\">Users Network</a>\n" +
-        "            <a class=\"navLink  nav-link\" href=\"/graph\" >Artists Network</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
-           "             <button class=\"btn  \" onclick=login() style=\"background-color:#1DB954;color:white;border-radius:10%;\">Login</button>\n"  +
-        "        </nav>\n")
-    }
-    else if(active === 'Artists Network'){
-        $("body").html("<nav class=\"navbar\">\n" +
-        "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
-        "            </a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
-            "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
-        "            <a class=\"navLink navLinkActive nav-link\" href=\"/graph\" >Artists Network</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
-           "             <button class=\"btn  \" style=\"background-color:#1DB954;color:white;border-radius:10%;\">Login</button>\n"  +
-        "        </nav>\n")
-    }
-    else if(active === 'recommender'){
-        $("body").html("<nav class=\"navbar\">\n" +
-        "            <a class=\"navbar-brand\" href=\"/home\">\n" +
-        "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
-        "            </a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
-            "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
-        "            <a class=\"navLink nav-link\" href=\"/graph\" >Artists Network</a>\n" +
-        "            <a class=\"navLink navLinkActive nav-link\" href=\"/recommendations\">Recommendantions</a>\n" +
-            "             <button class=\"btn  \" style=\"background-color:#1DB954;color:white;border-radius:10%;\">Login</button>\n" +
-        "        </nav>\n")
-    }
+        let logged = false;
+        if (getCookie('code') !== null)
+            logged = true;
+        if (logged) {
+            if(active === 'home'){
+            $("#main").html("<nav class=\"navbar\">\n" +
+            "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+            "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+            "            </a>\n" +
+            "            <a class=\"navLink navLinkActive nav-link\" href=\"/home\">Home</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+            "            <a class=\"navLink nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+            "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
+            "             <button class=\"btn\" onclick=logout(); style=\"background-color:red;color:white;border-radius:10%;\">Logout</button>\n" +
+            "        </nav>\n" )
+            }
+            else if(active == 'test'){
+                $("body").html("<nav class=\"navbar\">\n" +
+                "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+                "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+                "            </a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
+                    "            <a class=\"navLink navLinkActive nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+                "            <a class=\"navLink  nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
+                   "             <button class=\"btn \" onclick=logout(); style=\"background-color:red;color:white;border-radius:10%;\">Logout</button>\n"  +
+                "        </nav>\n")
+            }
+            else if(active === 'Artists Network'){
+                $("body").html("<nav class=\"navbar\">\n" +
+                "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+                "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+                "            </a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
+                    "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+                "            <a class=\"navLink navLinkActive nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
+                   "             <button class=\"btn\" onclick=logout(); style=\"background-color:red;color:white;border-radius:10%;\">Logout</button>\n"  +
+                "        </nav>\n")
+            }
+            else if(active === 'recommender'){
+                $("body").html("<nav class=\"navbar\">\n" +
+                "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+                "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+                "            </a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
+                    "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+                "            <a class=\"navLink navLinkActive nav-link\" href=\"/recommendations\">Recommendantions</a>\n" +
+                    "             <button class=\"btn\" onclick=logout(); style=\"background-color:red;color:white;border-radius:10%;\">Logout</button>\n" +
+                "        </nav>\n")
+            }
+        }
+        else {
+            if(active === 'home'){
+            $("#main").html("<nav class=\"navbar\">\n" +
+            "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+            "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+            "            </a>\n" +
+            "            <a class=\"navLink navLinkActive nav-link\" href=\"/home\">Home</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+            "            <a class=\"navLink nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+            "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
+            "             <button class=\"btn  \" onclick=login(); style=\"background-color:#1DB954;color:white;border-radius:10%;\">Login</button>\n" +
+            "        </nav>\n" )
+            }
+            else if(active == 'test'){
+                $("body").html("<nav class=\"navbar\">\n" +
+                "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+                "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+                "            </a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
+                    "            <a class=\"navLink navLinkActive nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+                "            <a class=\"navLink  nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
+                   "             <button class=\"btn  \" onclick=login(); style=\"background-color:#1DB954;color:white;border-radius:10%;\">Login</button>\n"  +
+                "        </nav>\n")
+            }
+            else if(active === 'Artists Network'){
+                $("body").html("<nav class=\"navbar\">\n" +
+                "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+                "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+                "            </a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
+                    "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+                "            <a class=\"navLink navLinkActive nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/recommendations\">Recommendations</a>\n" +
+                   "             <button class=\"btn  \" onclick=login(); style=\"background-color:#1DB954;color:white;border-radius:10%;\">Login</button>\n"  +
+                "        </nav>\n")
+            }
+            else if(active === 'recommender'){
+                $("body").html("<nav class=\"navbar\">\n" +
+                "            <a class=\"navbar-brand\" href=\"/home\">\n" +
+                "              <img alt=\"Brand\" src=\"{% static 'images/Logo.png' %}\">\n" +
+                "            </a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/home\">Home</a>\n" +
+                    "            <a class=\"navLink nav-link\" href=\"/users_graph\">Users Network</a>\n" +
+                "            <a class=\"navLink nav-link\" href=\"/graph\" >Artists Network</a>\n" +
+                "            <a class=\"navLink navLinkActive nav-link\" href=\"/recommendations\">Recommendantions</a>\n" +
+                    "             <button class=\"btn \" onclick=login(); style=\"background-color:#1DB954;color:white;border-radius:10%;\" >Login</button>\n" +
+                "        </nav>\n")
+            }
+        }
 }
 
 function showError(jqXHR) {

@@ -82,7 +82,7 @@ def authenticate(request):
         request.__setattr__('refresh', refresh_token)
         token = json.dumps(crawler.client_credentials_manager.get_access_token())
         request.__setattr__('client', token)
-    return render(request, 'home.html')
+    return render(request, 'auth.html')
 
 
 def foll_rec(request):
