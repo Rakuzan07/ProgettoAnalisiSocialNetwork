@@ -11,9 +11,6 @@ def create_network():
     artists = crawler.get_all_artists_followed_by_all_users()
     attr = {}
     for it in artists.keys():
-        """if it == 'pjasn-user2':
-            for art in artists[it]:
-                print(art.id)"""
 
         artists_array=artists[it]
         for index in range(len(artists_array)):
